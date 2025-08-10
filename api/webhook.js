@@ -23,8 +23,16 @@ export default function handler(req, res) {
         return res.status(400).json({error: 'Missing toEmail, fromName, or subject query parameter'});
     }
 
-    // 获取请求体中的 message
-    const {message} = req.body;
+    const contentType = req.headers['content-type'];
+    let message = '';
+    // 根据 Content-Type 解析请求体
+    if (contentType && contentType.includes('json')) {
+        // 解析 JSON 格式
+        message = JSON.stringify(req.body, null, 2);
+    } else {
+        // 对于其他类型（例如纯文本）
+        message = req.body || 'No message content available'; // 如果是纯文本
+    }
 
     // 邮件内容
     const mailOptions = {
