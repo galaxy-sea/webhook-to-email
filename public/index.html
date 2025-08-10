@@ -39,7 +39,7 @@
         const fromName = fromNameInput.value;
         const subject = subjectInput.value;
 
-        const webhookUrl = `${window.location.origin}/webhook?toEmail=${encodeURIComponent(toEmail)}&fromName=${encodeURIComponent(fromName)}&subject=${encodeURIComponent(subject)}`;
+        const webhookUrl = `${window.location.origin}/api/webhook?toEmail=${encodeURIComponent(toEmail)}&fromName=${encodeURIComponent(fromName)}&subject=${encodeURIComponent(subject)}`;
 
         webhookUrlElement.textContent = webhookUrl;
 
