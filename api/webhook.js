@@ -1,19 +1,6 @@
+// api/webhook.js
 require('dotenv').config();
-const express = require('express');
 const nodemailer = require('nodemailer');
-const path = require('path');
-
-// 创建 Express 应用
-const app = express();
-const port = process.env.PORT || 3000;
-
-// 解析 JSON 请求体
-app.use(express.json());
-
-// 设置静态文件服务
-app.use(express.static(path.join(__dirname, 'public')));
-
-// 默认使用 QQ 邮箱，如果环境变量中没有指定其他邮件服务
 const emailService = process.env.EMAIL_SERVICE || 'qq';
 
 // 配置 Nodemailer 邮件服务
@@ -25,8 +12,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Webhook 端点
-app.post('/webhook', (req, res) => {
+export default function handler(req, res) {
     // 从 URL 查询参数中获取 'toEmail', 'fromName' 和 'subject'
     const toEmail = req.query.toEmail;
     const fromName = req.query.fromName;
@@ -55,14 +41,5 @@ app.post('/webhook', (req, res) => {
         }
         res.status(200).json({message: 'Email sent successfully', info});
     });
-});
+}
 
-// 路由：显示生成 Webhook URL 的页面
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// 启动服务器
-app.listen(port, () => {
-    console.log(`Webhook server is running on port ${port}`);
-});
