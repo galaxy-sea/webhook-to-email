@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Webhook URL</title>
+</head>
+<body>
+
+<h1>Generate Webhook URL</h1>
+<form id="webhookForm">
+    <label for="toEmail">Recipient Email (toEmail):</label>
+    <input type="email" id="toEmail" name="toEmail" required>
+    <br>
+    <label for="fromName">Sender Name (fromName):</label>
+    <input type="text" id="fromName" name="fromName" required>
+    <br>
+    <label for="subject">Subject (subject):</label>
+    <input type="text" id="subject" name="subject" required>
+    <br>
+</form>
+
+<div id="result" style="display: none;">
+    <h3>Generated Webhook URL:</h3>
+    <p id="webhookUrl"></p>
+    <button id="copyButton">Copy to Clipboard</button>
+</div>
+
+<script>
+    const toEmailInput = document.getElementById('toEmail');
+    const fromNameInput = document.getElementById('fromName');
+    const subjectInput = document.getElementById('subject');
+    const copyButton = document.getElementById('copyButton');
+    const resultDiv = document.getElementById('result');
+    const webhookUrlElement = document.getElementById('webhookUrl');
+
+    function updateWebhookUrl() {
+        const toEmail = toEmailInput.value;
+        const fromName = fromNameInput.value;
+        const subject = subjectInput.value;
+
+        const webhookUrl = `${window.location.origin}/webhook?toEmail=${encodeURIComponent(toEmail)}&fromName=${encodeURIComponent(fromName)}&subject=${encodeURIComponent(subject)}`;
+
+        webhookUrlElement.textContent = webhookUrl;
+
+        resultDiv.style.display = 'block';
+    }
+
+    function copyToClipboard() {
+        const webhookUrl = webhookUrlElement.textContent;
+
+        const tempTextArea = document.createElement('textarea');
+        tempTextArea.value = webhookUrl;
+        document.body.appendChild(tempTextArea);
+
+        tempTextArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempTextArea);
+
+        alert('Webhook URL copied to clipboard!');
+    }
+
+    [toEmailInput, fromNameInput, subjectInput].forEach(input => {
+        input.addEventListener('input', updateWebhookUrl);
+    });
+
+    copyButton.addEventListener('click', copyToClipboard);
+</script>
+
+</body>
+</html>
